@@ -33,8 +33,42 @@ bhl_res <- findCollectorsBHL(name_to_check, bhl_key = bhl_api_key)
 
 
 library(plantlist)
-library(CoordinateCleaner)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#check coords
+library(CoordinateCleaner)
+library(sp)
+
+##DMS
+coords <- sqlQuery(ch, paste("SELECT id, dms_lat_degrees, dms_lat_minutes, dms_lat_seconds, dms_lat_ns, dms_long_degrees, dms_long_minutes, dms_long_seconds, dms_long_ew FROM ",dataTable, "WHERE coord_unit = 'DMS'"))
+
+dat <- matrix(c(coords$dms_lat_degrees, coords$dms_lat_minutes, coords$dms_lat_seconds, coords$dms_long_degrees, coords$dms_long_minutes, coords$dms_lat_seconds), 
+              byrow = TRUE, nrow = 2)
+epi.dms(dat)
 
 
 
