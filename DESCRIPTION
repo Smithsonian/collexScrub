@@ -1,0 +1,11 @@
+Package: collexclean
+Type: Package
+Title: R package to clean collection data
+Version: 0.1
+Date: 2018-05-01
+Author: Luis J. Villanueva
+Maintainer: Luis J. Villanueva <villanueval@si.edu>
+Description: R package to clean collection data
+License: CC0
+Encoding: UTF-8
+Depends: R(>= 2.14.0), curl, RCurl, XML, RODBC, jsonlite, httr, rbhl
