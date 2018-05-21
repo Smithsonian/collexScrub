@@ -61,14 +61,19 @@ library(plantlist)
 
 #check coords
 library(CoordinateCleaner)
-library(sp)
+#library(sp)
 
 ##DMS
-coords <- sqlQuery(ch, paste("SELECT id, dms_lat_degrees, dms_lat_minutes, dms_lat_seconds, dms_lat_ns, dms_long_degrees, dms_long_minutes, dms_long_seconds, dms_long_ew FROM ",dataTable, "WHERE coord_unit = 'DMS'"))
+coords <- sqlQuery(ch, paste("SELECT id, sheet_barcode, country, dms_lat_degrees, dms_lat_minutes, dms_lat_seconds, dms_lat_ns, dms_long_degrees, dms_long_minutes, dms_long_seconds, dms_long_ew FROM ",dataTable, "WHERE coord_unit = 'DMS'"), stringsAsFactors = FALSE)
 
-dat <- matrix(c(coords$dms_lat_degrees, coords$dms_lat_minutes, coords$dms_lat_seconds, coords$dms_long_degrees, coords$dms_long_minutes, coords$dms_lat_seconds), 
-              byrow = TRUE, nrow = 2)
-epi.dms(dat)
+print(paste("  There are", dim(coords)[1], "location records"))
+
+dat <- matrix(c(coords$id, coords$sheet_barcode, coords$country, coords$dms_lat_degrees, coords$dms_lat_minutes, coords$dms_lat_seconds, coords$dms_lat_ns, coords$dms_long_degrees, coords$dms_long_minutes, coords$dms_long_seconds, coords$dms_long_ew), 
+              byrow = TRUE, nrow = 11)
+
+for (i in 1:length(dat)){
+  dms2dd <- function(deg = 0, min = 0, sec = 0, direction = "N")  
+}
 
 
 
