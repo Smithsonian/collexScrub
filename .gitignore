@@ -37,3 +37,6 @@ vignettes/*.pdf
 settings.R
 
 .Rbuildignore
+
+#local data files
+data
