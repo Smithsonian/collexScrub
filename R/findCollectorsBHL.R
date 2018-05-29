@@ -1,6 +1,6 @@
 #Function to search authors in the Biodiversity Heritage Library
 # Just a wrapper around the rbhl package
-
+#' @export
 findCollectorsBHL <- function(collector, year = NA, bhl_key = NA){
   if (is.na(bhl_key)){
     stop("bhl_key is missing")
@@ -30,6 +30,9 @@ findCollectorsBHL <- function(collector, year = NA, bhl_key = NA){
         dates <- strsplit(creator_dates, "-")[[1]]
         dob = dates[1]
         dod = dates[2]
+      }else{
+        dob = NA
+        dod = NA
       }
       
       colfields = NA

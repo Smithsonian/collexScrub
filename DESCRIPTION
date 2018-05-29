@@ -8,5 +8,5 @@ Authors@R: person("Luis J", "Villanueva", email = "villanueval@si.edu",
 Description: R package to clean collection data
 License: CC0
 Encoding: UTF-8
-Depends: R(>= 3.0.0), curl, RCurl, XML, RODBC, jsonlite, httr, rbhl, rgdal, sp, Taxonstand
+Depends: R(>= 3.0.0), curl, RCurl, XML, RODBC, jsonlite, httr, rbhl, rgdal, sp, Taxonstand, googleway, dplyr, worrms
 RoxygenNote: 6.0.1
