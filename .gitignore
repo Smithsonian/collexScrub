@@ -42,3 +42,8 @@ settings.R
 data
 
 logs
+
+*.csv
+*.zip
+*.accdb
+*.xlsx
