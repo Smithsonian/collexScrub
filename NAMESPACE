@@ -2,11 +2,12 @@
 
 export(check.integer)
 export(check_dd_dir)
-export(check_taxa_paleo)
 export(dlTL2)
 export(dms2dd)
 export(findCollectorsBHL)
+export(findCollectorsBotany)
 export(find_match_str)
+export(find_sciname_paleo)
 export(round2)
 importFrom(XML,xmlParse)
 importFrom(XML,xmlToList)

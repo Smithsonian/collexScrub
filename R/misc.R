@@ -122,33 +122,6 @@ check_dd_dir <- function(sheet_barcode, data, gadm){
 
 
 
-#' @export
-check_taxa_paleo <- function(name_check){
-  library(worrms)
-  library(rgbif)
-
-  if (name_check == ""){
-    return(verbatim_name = name_check, worms_ccr = NA, gbif_ccr = NA)
-  }
-  
-  w <- try(worrms::wm_records_taxamatch(name = name_check), silent = TRUE)
-  if (class(w)=="try-error"){
-    w_sp <- NA
-  }else{
-    w_sp <- w[[1]]$scientificname
-  }
-  
-  # g <- try(rgbif::name_lookup(query = name_check), silent = TRUE)
-  # if (class(g)=="try-error"){
-  #   g_sp <- NA
-  # }else{
-  #   #g_sp <- unlist(unique(g$data$scientificName[1]))
-  #   g_sp <- g$data$scientificName[1]
-  # }
-  
-  #return(list(verbatim_name = name_check, worms_ccr = w_sp, gbif_ccr = g_sp))
-  return(c(name_check, w_sp))
-}
 
 
 #' @export

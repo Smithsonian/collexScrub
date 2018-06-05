@@ -1,4 +1,5 @@
 #Function to search collectors in Harvard University Herbaria & Libraries
+#' @export
 
 findCollectorsBotany <- function(collector, year = NA, country = NA){
   url_check <- paste("http://kiki.huh.harvard.edu/databases/botanist_search.php?individual=on&json=y&name=", collector, sep = "")

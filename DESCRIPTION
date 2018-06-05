@@ -1,12 +1,12 @@
-Package: collexclean
+Package: collexScrub
 Type: Package
 Title: Scripts and Tools to Clean Scientific Collection Records
 Version: 0.1
-Date: 2018-05-31
+Date: 2018-06-05
 Authors@R: person("Luis J", "Villanueva", email = "villanueval@si.edu",
                   role = c("aut", "cre"))
 Description: R package to clean and validate the data of items in scientific collections.
 License: CC0
 Encoding: UTF-8
-Depends: R(>= 3.0.0), curl, XML, RODBC, jsonlite, httr, rgdal, sp, Taxonstand, dplyr, worrms, stringdist
+Depends: R(>= 3.2.0), curl, XML, RODBC, jsonlite, httr, rgdal, sp, Taxonstand, dplyr, worrms, stringdist
 RoxygenNote: 6.0.1

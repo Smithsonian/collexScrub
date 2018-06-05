@@ -14,24 +14,63 @@ library(stringdist)
 
 
 #############################
-#SETTINGS FILE
+#Check arguments
+#############################
+args = commandArgs(trailingOnly=TRUE)
+
+#only for batch
+if(!interactive()){
+  if (length(args) != 2) {
+    stop("Arguments are missing, should be: 1) a settings file; and 2) an accdb file", call.=FALSE)
+  }else{
+    #settings file
+    settings_file <- args[1]
+    source(settings_file)
+  }
+}else{
+  #interactive, assume settings.R file in the working dir
+  source("settings.R")
+}
 #############################
 
-source("settings.R")
 
-#############################
+#interactive or batch?
+if(interactive()){
+  #Select db file
+  dbfile <- file.choose()
+  
+  if(!file.exists(dbfile)){
+    stop(paste("Could not open the file ", dbfile))
+  }
+  
+  ch <- try(odbcConnectAccess2007(dbfile), silent = TRUE)
+  if(ch==-1){
+    stop("There was an error reading the file. Check if R and Office match in using the 32-bit (most common) or 64-bit version.")
+  }
+  
+  tables <- sqlTables(ch, tableType = "TABLE")
+  
+  #Select a table
+  dataTable <- select.list(choices = tables$TABLE_NAME, title = "Select a table", multiple = FALSE, graphics = TRUE)
+}else{
+  #input data file
+  dbfile <- paste(botany_files_loc, "/", args[2], sep = "")
+  
+  if(!file.exists(dbfile)){
+    stop(paste("Could not read the file ", dbfile))
+  }
+  
+  ch <- try(odbcConnectAccess2007(dbfile), silent = TRUE)
+  if(ch==-1){
+    stop("There was an error reading the file. Check if R and Office match in using the 32-bit (most common) or 64-bit version.")
+  }
+  
+  tables <- sqlTables(ch, tableType = "TABLE")
+  
+  #Assumes one table in file to process
+  dataTable <- tables$TABLE_NAME[1]
+}
 
-
-
-#Select db file
-dbfile <- file.choose()
-
-ch <- odbcConnectAccess2007(dbfile)
-tables <- sqlTables(ch, tableType = "TABLE")
-
-#Select a table
-#dataTable <- select.list(tables$TABLE_NAME)
-dataTable <- tables$TABLE_NAME[1]
 no_rows <- sqlQuery(ch, paste("SELECT count(*) FROM ",dataTable))
 cat(paste("There are", prettyNum(no_rows[[1]], big.mark = ","), "rows in this database."))
 #############################
