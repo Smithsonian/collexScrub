@@ -8,5 +8,5 @@ Authors@R: person("Luis J", "Villanueva", email = "villanueval@si.edu",
 Description: R package to clean and validate the data of items in scientific collections.
 License: CC0
 Encoding: UTF-8
-Depends: R(>= 3.2.0), curl, XML, RODBC, jsonlite, httr, rgdal, sp, Taxonstand, dplyr, worrms, stringdist
+Depends: R(>= 3.2.0), RODBC, dplyr, stringdist
 RoxygenNote: 6.0.1

@@ -8,8 +8,9 @@ find_sciname_paleo <- function(input_name){
     return(cbind(input_name = input_name_original, matched_name = NA, data_source = NA, score = NA))
   }
   
-  #names with pipes, use first
-  input_name <- strsplit(input_name, "[|]")[[1]][1]
+  #names with pipes, use last
+  input_name_spl <- strsplit(input_name, "[|]")[[1]]
+  input_name <- input_name_spl[length(input_name_spl)]
 
   #remove names in parenthesis
   #from https://stackoverflow.com/a/24173271

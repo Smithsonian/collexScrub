@@ -3,6 +3,7 @@
 #############################
 #library(worrms)
 #library(rgbif)
+library(collexScrub)
 library(dplyr)
 library(parallel)
 #library(paleobioDB)
@@ -38,11 +39,14 @@ if(interactive()){
   files <- list.files(paleo_files_loc, pattern = ".csv", ignore.case = TRUE, include.dirs = FALSE, recursive = FALSE, no.. = TRUE)
   
   this_file <- select.list(choices = files, title = "Select a file", multiple = FALSE, graphics = TRUE)
+  save(this_file, file = "../dpo_shiny/paleo_sel_spp/fileinfo.RData")
+  
   excelfile <- paste(paleo_files_loc, "/", this_file, sep = "")
-  #excelfile <- file.choose()
 }else{
   # input data file
-  excelfile <- paste(paleo_files_loc, "/", args[1], sep = "")
+  this_file <- args[1]
+  save(this_file, file = "../dpo_shiny/paleo_sel_spp/fileinfo.RData")
+  excelfile <- paste(paleo_files_loc, "/", this_file, sep = "")
 }
 
 if(!file.exists(excelfile)){
@@ -61,10 +65,10 @@ cat(paste("There are", prettyNum(no_names, big.mark = ","), "unique names."))
 
 # 
 # #loop to test
-res <- data.frame(matrix(nrow = 0, ncol = 9, data = NA))
-for(i in 1:length(taxa_names[,1])){
- res <- rbind(res, find_sciname_paleo(taxa_names[i,1]), stringsasFactors = FALSE)
-}
+# res <- data.frame(matrix(nrow = 0, ncol = 9, data = NA))
+# for(i in 1:length(taxa_names[,1])){
+#  res <- rbind(res, find_sciname_paleo(taxa_names[i,1]), stringsasFactors = FALSE)
+# }
 
 
 ##############
@@ -84,7 +88,7 @@ res <- parLapply(cl, taxa_names[,1], find_sciname_paleo)
 #stop cluster
 stopCluster(cl)
 
-
+save(res, file = "../dpo_shiny/paleo_sel_spp/allresults.RData")
 
 
 #name_summary <- data.frame(matrix(nrow = 0, ncol = 4, data = NA))
@@ -93,7 +97,8 @@ name_summary <- list()
 #parse the results
 for(i in 1:length(res)){
   this_results <- data.frame(res[[i]], stringsAsFactors = FALSE)
-  if (dim(this_results)[1] > 1){
+  if (exists("matched_name", this_results)){
+  #if (dim(this_results)[1] > 1){
     this_results <- mutate(this_results, score = as.numeric(score))
     
     this_results <- dplyr::select(this_results, matched_name, score)
@@ -108,7 +113,7 @@ for(i in 1:length(res)){
   }
 }
 
-save(name_summary, file = "../dpo_shiny/results.RData")
+save(name_summary, file = "../dpo_shiny/paleo_sel_spp/results.RData")
 #####
 
 

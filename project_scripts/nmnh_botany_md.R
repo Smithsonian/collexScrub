@@ -2,12 +2,20 @@
 #Load required packages
 #############################
 library(RODBC)
-library(rgdal)
-library(sp)
+#library(rgdal)
+#library(sp)
 library(dplyr)
 library(parallel)
 library(stringdist)
 #library(Taxonstand)
+
+
+
+
+#############################
+#Load data
+#############################
+load("data/location_database.RData")
 
 
 
@@ -43,12 +51,12 @@ if(interactive()){
     stop(paste("Could not open the file ", dbfile))
   }
   
-  ch <- try(odbcConnectAccess2007(dbfile), silent = TRUE)
+  ch <- try(RODBC::odbcConnectAccess2007(dbfile), silent = TRUE)
   if(ch==-1){
     stop("There was an error reading the file. Check if R and Office match in using the 32-bit (most common) or 64-bit version.")
   }
   
-  tables <- sqlTables(ch, tableType = "TABLE")
+  tables <- RODBC::sqlTables(ch, tableType = "TABLE")
   
   #Select a table
   dataTable <- select.list(choices = tables$TABLE_NAME, title = "Select a table", multiple = FALSE, graphics = TRUE)
@@ -60,18 +68,18 @@ if(interactive()){
     stop(paste("Could not read the file ", dbfile))
   }
   
-  ch <- try(odbcConnectAccess2007(dbfile), silent = TRUE)
+  ch <- try(RODBC::odbcConnectAccess2007(dbfile), silent = TRUE)
   if(ch==-1){
     stop("There was an error reading the file. Check if R and Office match in using the 32-bit (most common) or 64-bit version.")
   }
   
-  tables <- sqlTables(ch, tableType = "TABLE")
+  tables <- RODBC::sqlTables(ch, tableType = "TABLE")
   
   #Assumes one table in file to process
   dataTable <- tables$TABLE_NAME[1]
 }
 
-no_rows <- sqlQuery(ch, paste("SELECT count(*) FROM ",dataTable))
+no_rows <- RODBC::sqlQuery(ch, paste("SELECT count(*) FROM ",dataTable))
 cat(paste("There are", prettyNum(no_rows[[1]], big.mark = ","), "rows in this database."))
 #############################
 
@@ -100,11 +108,11 @@ cat(paste("There are", prettyNum(no_rows[[1]], big.mark = ","), "rows in this da
 #############################
 #PRECISE_LOCATION
 #############################
-prec_loc_known <- sqlQuery(ch, paste("SELECT country, state_province, precise_locality FROM ",dataTable, " WHERE precise_locality not like '%[*]%' group by country, state_province, precise_locality"), stringsAsFactors = FALSE)
+prec_loc_known <- RODBC::sqlQuery(ch, paste("SELECT country, state_province, precise_locality FROM ",dataTable, " WHERE precise_locality not like '%[*]%' group by country, state_province, precise_locality"), stringsAsFactors = FALSE)
 
 print(paste("There are", prettyNum(dim(prec_loc_known)[1], big.mark = ","), "known locations"))
 
-prec_loc_unknown <- sqlQuery(ch, paste("SELECT id, sheet_barcode, country, state_province, precise_locality FROM ",dataTable, " WHERE precise_locality like '%[*]%'"), stringsAsFactors = FALSE)
+prec_loc_unknown <- RODBC::sqlQuery(ch, paste("SELECT id, sheet_barcode, country, state_province, precise_locality FROM ",dataTable, " WHERE precise_locality like '%[*]%'"), stringsAsFactors = FALSE)
 
 print(paste("There are", prettyNum(dim(prec_loc_unknown)[1], big.mark = ","), "unknown locations"))
 #
@@ -122,11 +130,24 @@ debug_file <- paste("logs/", format(Sys.time(), "%Y%m%d_%H%M%S"), ".txt", sep = 
 cl <- makeCluster(no_cores, outfile = debug_file, type = "PSOCK")
 
 #execute function on cluster
-res <- parLapply(cl, prec_loc_unknown$precise_locality, find_match_str, database = prec_loc_known$precise_locality, threshold = 10, no_cores = per_proc_cores)
+res <- parLapply(cl, prec_loc_unknown$precise_locality, find_match_str, database = location_database$LocPreciseLocation, threshold = 10, no_cores = per_proc_cores)
 
 #stop cluster
 stopCluster(cl)
 #########
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -203,7 +224,7 @@ bhl_res <- findCollectorsBHL(name_to_check, bhl_key = bhl_api_key)
 #############################
 
 ##DMS
-coords <- sqlQuery(ch, paste("SELECT id, sheet_barcode, country, dms_lat_degrees, dms_lat_minutes, dms_lat_seconds, dms_lat_ns, dms_long_degrees, dms_long_minutes, dms_long_seconds, dms_long_ew FROM ",dataTable, "WHERE coord_unit = 'DMS'"), stringsAsFactors = FALSE)
+coords <- RODBC::sqlQuery(ch, paste("SELECT id, sheet_barcode, country, dms_lat_degrees, dms_lat_minutes, dms_lat_seconds, dms_lat_ns, dms_long_degrees, dms_long_minutes, dms_long_seconds, dms_long_ew FROM ",dataTable, "WHERE coord_unit = 'DMS'"), stringsAsFactors = FALSE)
 
 print(paste("There are", prettyNum(dim(coords)[1], big.mark = ","), "DMS location records"))
 
@@ -519,9 +540,9 @@ cat(paste("Rows with countries matched: ", prettyNum(dim(countries_match_yes)[1]
 #Collectors
 #############################
 #? represent when not sure if the string belongs to the field
-collectors_known <- sqlQuery(ch, paste("SELECT collector_1, irn_1 FROM ",dataTable, " where irn_1 IS NOT NULL GROUP BY collector_1, irn_1"), stringsAsFactors = FALSE)
+collectors_known <- RODBC::sqlQuery(ch, paste("SELECT collector_1, irn_1 FROM ",dataTable, " where irn_1 IS NOT NULL GROUP BY collector_1, irn_1"), stringsAsFactors = FALSE)
 
-collectors_noirn <- sqlQuery(ch, paste("SELECT distinct collector_1 FROM ",dataTable, " where irn_1 IS NULL AND collector_1 IS NOT NULL"), stringsAsFactors = FALSE)
+collectors_noirn <- RODBC::sqlQuery(ch, paste("SELECT distinct collector_1 FROM ",dataTable, " where irn_1 IS NULL AND collector_1 IS NOT NULL"), stringsAsFactors = FALSE)
 
 
 sink('a.csv', append = FALSE)

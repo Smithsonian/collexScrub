@@ -1,22 +1,22 @@
-\name{collexclean-package}
-\alias{collexclean-package}
-\alias{collexclean}
+\name{collexScrub-package}
+\alias{collexScrub-package}
+\alias{collexScrub}
 \docType{package}
 \title{
-\packageTitle{collexclean}
+\packageTitle{collexScrub}
 }
 \description{
-\packageDescription{collexclean}
+\packageDescription{collexScrub}
 }
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{collexclean}
-\packageIndices{collexclean}
+\packageDESCRIPTION{collexScrub}
+\packageIndices{collexScrub}
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-\packageAuthor{collexclean}
+\packageAuthor{collexScrub}
 
 Maintainer: Luis J. Villanueva
 }
