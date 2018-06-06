@@ -34,18 +34,4 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
-settings.R
-
 .Rbuildignore
-
-#local data files
-data
-
-logs
-
-*.csv
-*.zip
-*.accdb
-*.xlsx
-
-*.RData
