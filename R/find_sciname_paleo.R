@@ -13,7 +13,7 @@ find_sciname_paleo <- function(input_name, sep_char = "|"){
   input_name_original <- input_name
   
   if (nchar(input_name) == 0){
-    return(cbind(input_name = input_name_original, matched_name = NA, data_source = NA, score = NA))
+    return(cbind(input_name = input_name_original, paleodb_matched_name = NA, paleodb_score = NA, paleodb_classification = NA, paleodb_name_id = NA, worms_matched_name = NA, worms_score = NA, worms_classification = NA, worms_name_id = NA))
   }
   
   #names with pipes, use last

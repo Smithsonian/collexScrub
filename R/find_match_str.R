@@ -2,10 +2,10 @@
 find_match_str <- function(str_to_check, database, method = "osa", threshold = 10, no_cores = 2){
   library(stringdist)
   
-  if (str_to_check == "" || str_to_check == "-" || str_to_check == "NA"){
+  if (str_to_check == "" || str_to_check == "-" || str_to_check == "NA" || is.na(str_to_check)){
     return(data.frame(str_to_check = str_to_check, match = NA, score = NA))
   }
-  
+
   results <- data.frame(matrix(data = NA, ncol = 3, nrow = 0))
   
   this_str <- gsub("[?!*]", "", as.character(str_to_check))
