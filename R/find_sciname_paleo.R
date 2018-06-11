@@ -1,6 +1,14 @@
-#' @export
+#'Find the matches of a name in both the PaleoDB and WoRMS databases
 
-find_sciname_paleo <- function(input_name){
+#' 
+#' @param input_name A scientific name to check against PaleoDB and WoRMS
+#' @param sep_char Separating character for strings of \code{input_name}, the function will search only the last value. Default is pipe (|)
+#' @return A dataframe of species matched.
+#
+#' @export
+#' @importFrom taxize gnr_resolve
+#' 
+find_sciname_paleo <- function(input_name, sep_char = "|"){
   
   input_name_original <- input_name
   
@@ -25,46 +33,37 @@ find_sciname_paleo <- function(input_name){
   
   library(taxize)
   
-  res <- resolve(input_name)
+  #paleo
+  res_paleodb <- taxize::gnr_resolve(input_name, data_source_ids = c(172), best_match_only = TRUE, fields = "all")
+  #worms
+  res_worms <- taxize::gnr_resolve(input_name, data_source_ids = c(9), best_match_only = TRUE, fields = "all")
+
+  #Any matches from PaleoDB?
+  if (exists("matched_name", res_paleodb)){
+    paleodb_matched_name <- res_paleodb$matched_name
+    paleodb_score <- res_paleodb$score
+    paleodb_classification <- res_paleodb$classification_path
+    paleodb_name_id <- res_paleodb$taxon_id
+  }else{
+    paleodb_matched_name <- NA
+    paleodb_score <- NA
+    paleodb_classification <- NA
+    paleodb_name_id <- NA
+  }
   
-  return(cbind(input_name = input_name_original, matched_name = res$gnr$matched_name, data_source = res$gnr$data_source_title, score = res$gnr$score))
+  #Any matches from WoRMS?
+  if (exists("matched_name", res_worms)){
+    worms_matched_name <- res_worms$matched_name
+    worms_score <- res_worms$score
+    worms_classification <- res_worms$classification_path
+    worms_name_id <- res_worms$taxon_id
+  }else{
+    worms_matched_name <- NA
+    worms_score <- NA
+    worms_classification <- NA
+    worms_name_id <- NA
+  }
   
-  # library(worrms)
-  # library(rgbif)
-  # 
-  # name_check <- gsub("\"", "", name_check)
-  # 
-  # if (name_check == ""){
-  #   return(verbatim_name = name_check, worms_ccr = NA, gbif_ccr = NA)
-  # }
-  # 
-  # w <- try(worrms::wm_records_taxamatch(name = name_check), silent = TRUE)
-  # if (class(w)=="try-error"){
-  #   w_sp <- NA
-  #   w_sp_id <- NA
-  #   w_sp_status <- NA
-  #   w_sp_accepted <- NA
-  # }else{
-  #   w_sp <- w[[1]]$scientificname
-  #   w_sp_id <- w[[1]]$AphiaID
-  #   w_sp_status <- w[[1]]$status
-  #   w_sp_accepted <- w[[1]]$valid_name
-  # }
-  # 
-  # g <- try(rgbif::name_backbone(name = name_check), silent = TRUE)
-  # if (class(g)=="try-error"){
-  #   g_sp <- NA
-  #   g_sp_id <- NA
-  #   g_sp_status <- NA
-  #   g_sp_accepted <- NA
-  # }else{
-  #   #g_sp <- unlist(unique(g$data$scientificName[1]))
-  #   g_sp <- g$canonicalName
-  #   g_sp_id <- g$usageKey
-  #   g_sp_status <- g$status
-  #   g_sp_accepted <- g$species
-  # }
-  # 
-  # #return(list(verbatim_name = name_check, worms_ccr = w_sp, gbif_ccr = g_sp))
-  # return(c(name_check = name_check, w_sp = w_sp, w_sp_id = w_sp_id, w_sp_status = w_sp_status, w_sp_accepted = w_sp_accepted, g_sp = g_sp, g_sp_id = g_sp_id, g_sp_status = g_sp_status, g_sp_accepted = g_sp_accepted))
+  
+  return(cbind(input_name = input_name_original, paleodb_matched_name = paleodb_matched_name, paleodb_score = paleodb_score, paleodb_classification = paleodb_classification, paleodb_name_id = paleodb_name_id, worms_matched_name = worms_matched_name, worms_score = worms_score, worms_classification = worms_classification, worms_name_id = worms_name_id))
 }
