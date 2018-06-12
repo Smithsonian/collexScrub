@@ -3,7 +3,7 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
 
-find_match_str <- function(str_to_check, database, method = "osa", threshold = 10, no_cores = 2, year_limits = FALSE, database_strings = NA, str_to_check_col = NA){
+find_match_str <- function(str_to_check, database, method = "osa", threshold = 10, no_cores = 2, year_limits = FALSE, country_limits = FALSE, database_strings = NA, str_to_check_col = NA){
   
   #check if str_to_check is a df with more than one columns
   if (dim(str_to_check)[2]>1 && is.na(str_to_check_col)){
@@ -21,22 +21,30 @@ find_match_str <- function(str_to_check, database, method = "osa", threshold = 1
     this_str <- str_to_check[1]
   }
   
+  this_str_original <- this_str
   
-    
+  #if the string to find is empty, return NA
   if (this_str == "" || this_str == "-" || this_str == "NA" || is.na(this_str)){
-    ret_data <- as.data.frame(cbind(this_str, NA, NA))
+    ret_data <- as.data.frame(cbind(this_str_original, NA, NA))
     names(ret_data) <- c("str_to_check", "match", "score")
     return(ret_data)
   }
 
+  #remove these chars
   this_str <- gsub("[?!*]", "", as.character(this_str))
   
+  #if limiting by year, use only locations with that year
   if (year_limits && !is.na(str_to_check$year)){
     database <- dplyr::filter(database, year == str_to_check$year)
   }
   
+  #if limiting by country, use only locations with that country
+  if (country_limits && !is.na(str_to_check$country)){
+    database <- dplyr::filter(database, country == str_to_check$country)
+  }
+  
   if (dim(database)[[1]]==0){
-    ret_data <- as.data.frame(cbind(this_str, NA, NA))
+    ret_data <- as.data.frame(cbind(this_str_original, NA, NA))
     names(ret_data) <- c("str_to_check", "match", "score")
     return(ret_data)
   }else{
@@ -49,10 +57,10 @@ find_match_str <- function(str_to_check, database, method = "osa", threshold = 1
     
     this_data <- cbind(database[which(str_matches < threshold),], str_matches[which(str_matches < threshold),1])
     
-    results <- as.data.frame(cbind(this_str, this_data[,1], this_data[,2]))
+    results <- as.data.frame(cbind(this_str_original, this_data[,1], this_data[,2]))
     
     if (dim(results)[1] == 1){
-      ret_data <- as.data.frame(cbind(this_str, NA, NA))
+      ret_data <- as.data.frame(cbind(this_str_original, NA, NA))
       names(ret_data) <- c("str_to_check", "match", "score")
       return(ret_data)
     }else{
