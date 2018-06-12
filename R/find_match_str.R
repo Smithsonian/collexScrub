@@ -29,8 +29,6 @@ find_match_str <- function(str_to_check, database, method = "osa", threshold = 1
     return(ret_data)
   }
 
-  #results <- data.frame(matrix(data = NA, ncol = 3, nrow = 0))
-  
   this_str <- gsub("[?!*]", "", as.character(this_str))
   
   if (year_limits && !is.na(str_to_check$year)){
@@ -41,24 +39,26 @@ find_match_str <- function(str_to_check, database, method = "osa", threshold = 1
     ret_data <- as.data.frame(cbind(this_str, NA, NA))
     names(ret_data) <- c("str_to_check", "match", "score")
     return(ret_data)
-  }
-  
-  if (!is.na(database_strings)){
-    database <- dplyr::select(database, database_strings)
-  }
-  
-  str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method))
-  
-  this_data <- cbind(database[which(str_matches < threshold),], str_matches[which(str_matches < threshold),1])
-  
-  results <- as.data.frame(cbind(this_str, this_data[,1], this_data[,2]))
-  
-  if (dim(results)[1] == 1){
-    ret_data <- as.data.frame(cbind(this_str, NA, NA))
-    names(ret_data) <- c("str_to_check", "match", "score")
-    return(ret_data)
   }else{
-    names(results) <- c("str_to_check", "match", "score")
-    return(results)
+    
+    if (!is.na(database_strings)){
+      database <- dplyr::select(database, database_strings)
+    }
+    
+    str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method))
+    
+    this_data <- cbind(database[which(str_matches < threshold),], str_matches[which(str_matches < threshold),1])
+    
+    results <- as.data.frame(cbind(this_str, this_data[,1], this_data[,2]))
+    
+    if (dim(results)[1] == 1){
+      ret_data <- as.data.frame(cbind(this_str, NA, NA))
+      names(ret_data) <- c("str_to_check", "match", "score")
+      return(ret_data)
+    }else{
+      names(results) <- c("str_to_check", "match", "score")
+      return(results)
+    }
   }
+  
 }
