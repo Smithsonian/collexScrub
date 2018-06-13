@@ -1,8 +1,17 @@
+#' Find a string in a database of known strings
+#' 
+#'Function to check a string that has problems due to 
+#' incomplete transcription, OCR problems, illegible 
+#' words, and other problems. 
+#'
+#' @return A dataframe of \code{str_to_check} (the string provided),
+#' \code{match} (the string matched from the database), \code{score} (the score for this string).}.
+#'
 #' @export
 #' @importFrom stringdist stringdist
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
-
+#' 
 find_match_str <- function(str_to_check, database, method = "osa", threshold = 10, no_cores = 2, year_limits = FALSE, country_limits = FALSE, database_strings = NA, str_to_check_col = NA){
   
   #check if str_to_check is a df with more than one columns
@@ -21,10 +30,11 @@ find_match_str <- function(str_to_check, database, method = "osa", threshold = 1
     this_str <- str_to_check[1]
   }
   
-  this_str_original <- this_str
+  this_str_original <- as.character(this_str)
   
   #if the string to find is empty, return NA
   if (this_str == "" || this_str == "-" || this_str == "NA" || is.na(this_str)){
+    cat("Empty string, returning NAs.")
     ret_data <- as.data.frame(cbind(this_str_original, NA, NA))
     names(ret_data) <- c("str_to_check", "match", "score")
     return(ret_data)
