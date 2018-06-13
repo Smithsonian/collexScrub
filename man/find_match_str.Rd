@@ -8,8 +8,34 @@ find_match_str(str_to_check, database, method = "osa", threshold = 10,
   no_cores = 2, year_limits = FALSE, country_limits = FALSE,
   database_strings = NA, str_to_check_col = NA)
 }
+\arguments{
+\item{str_to_check}{String to check against the database}
+
+\item{database}{Database of known strings}
+
+\item{method}{Which method to use to try to find a match, See \code{Details} below}
+
+\item{threshold}{Maximum value for the score of the matches found}
+
+\item{no_cores}{How many cores to dedicate to this function execution}
+
+\item{year_limits}{Boolean whether to use \code{year} to limit the strings available to match}
+
+\item{country_limits}{Boolean whether to use \code{country} to limit the strings available to match}
+
+\item{database_strings}{Which column to use for matching in \code{database}, only needed if it is more than one columns}
+
+\item{str_to_check_col}{Which column to use for matching in \code{str_to_check}, only needed if it is more than one columns}
+}
+\value{
+A dataframe of \code{str_to_check} (the string provided),
+\code{match} (the string matched from the database), \code{score} (the score for this string).
+}
 \description{
 Function to check a string that has problems due to 
 incomplete transcription, OCR problems, illegible 
 words, and other problems.
+}
+\details{
+The \code{method} arguments is passed to \code{stringdist::stringdist()}. To see the details of the methods available, see \code{?stringdist::`stringdist-metrics`}.
 }

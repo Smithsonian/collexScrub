@@ -5,7 +5,21 @@
 #' words, and other problems. 
 #'
 #' @return A dataframe of \code{str_to_check} (the string provided),
-#' \code{match} (the string matched from the database), \code{score} (the score for this string).}.
+#' \code{match} (the string matched from the database), \code{score} (the score for this string).
+#'
+#' @param str_to_check String to check against the database
+#' @param database Database of known strings
+#' @param method Which method to use to try to find a match, See \code{Details} below
+#' @param threshold Maximum value for the score of the matches found
+#' @param no_cores How many cores to dedicate to this function execution
+#' @param year_limits Boolean whether to use \code{year} to limit the strings available to match
+#' @param country_limits Boolean whether to use \code{country} to limit the strings available to match
+#' @param database_strings Which column to use for matching in \code{database}, only needed if it is more than one columns
+#' @param str_to_check_col Which column to use for matching in \code{str_to_check}, only needed if it is more than one columns
+#' 
+#' @details The \code{method} arguments is passed to \code{stringdist::stringdist()}. To see the details of the methods available, see \code{?stringdist::`stringdist-metrics`}.
+#'
+#'
 #'
 #' @export
 #' @importFrom stringdist stringdist
