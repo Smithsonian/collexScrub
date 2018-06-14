@@ -76,7 +76,13 @@ find_match_str <- function(str_to_check, database, method = "osa", no_cores = 2,
       database <- dplyr::select(database, database_strings)
     }
     
-    str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method))
+    if (method == "jw"){
+      #Jaro distance
+      str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method, p = 0))
+    }else{
+      str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method))
+    }
+    
     
     #Don't apply threshold since they depend on the method
     #this_data <- cbind(database[which(str_matches < threshold),], str_matches[which(str_matches < threshold),1])
