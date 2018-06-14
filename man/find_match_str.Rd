@@ -4,9 +4,9 @@
 \alias{find_match_str}
 \title{Find a string in a database of known strings}
 \usage{
-find_match_str(str_to_check, database, method = "osa", threshold = 10,
-  no_cores = 2, year_limits = FALSE, country_limits = FALSE,
-  database_strings = NA, str_to_check_col = NA)
+find_match_str(str_to_check, database, method = "osa", no_cores = 2,
+  year_limits = FALSE, country_limits = FALSE, database_strings = NA,
+  str_to_check_col = NA)
 }
 \arguments{
 \item{str_to_check}{String to check against the database}
@@ -14,8 +14,6 @@ find_match_str(str_to_check, database, method = "osa", threshold = 10,
 \item{database}{Database of known strings}
 
 \item{method}{Which method to use to try to find a match, See \code{Details} below}
-
-\item{threshold}{Maximum value for the score of the matches found}
 
 \item{no_cores}{How many cores to dedicate to this function execution}
 

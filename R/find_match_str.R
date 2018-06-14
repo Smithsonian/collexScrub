@@ -10,7 +10,6 @@
 #' @param str_to_check String to check against the database
 #' @param database Database of known strings
 #' @param method Which method to use to try to find a match, See \code{Details} below
-#' @param threshold Maximum value for the score of the matches found
 #' @param no_cores How many cores to dedicate to this function execution
 #' @param year_limits Boolean whether to use \code{year} to limit the strings available to match
 #' @param country_limits Boolean whether to use \code{country} to limit the strings available to match
@@ -26,7 +25,7 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
 #' 
-find_match_str <- function(str_to_check, database, method = "osa", threshold = 10, no_cores = 2, year_limits = FALSE, country_limits = FALSE, database_strings = NA, str_to_check_col = NA){
+find_match_str <- function(str_to_check, database, method = "osa", no_cores = 2, year_limits = FALSE, country_limits = FALSE, database_strings = NA, str_to_check_col = NA){
   
   #check if str_to_check is a df with more than one columns
   if (dim(str_to_check)[2]>1 && is.na(str_to_check_col)){
@@ -79,7 +78,9 @@ find_match_str <- function(str_to_check, database, method = "osa", threshold = 1
     
     str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method))
     
-    this_data <- cbind(database[which(str_matches < threshold),], str_matches[which(str_matches < threshold),1])
+    #Don't apply threshold since they depend on the method
+    #this_data <- cbind(database[which(str_matches < threshold),], str_matches[which(str_matches < threshold),1])
+    this_data <- cbind(database, str_matches)
     
     results <- as.data.frame(cbind(this_str_original, this_data[,1], this_data[,2]))
     
