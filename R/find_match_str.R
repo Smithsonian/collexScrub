@@ -22,8 +22,8 @@
 #'
 #' @export
 #' @importFrom stringdist stringdist
-#' @importFrom dplyr filter
 #' @importFrom dplyr select
+#' @importFrom dplyr filter
 #' 
 find_match_str <- function(str_to_check, database, method = "osa", no_cores = 2, year_limits = FALSE, country_limits = FALSE, database_strings = NA, str_to_check_col = NA){
   
@@ -36,13 +36,13 @@ find_match_str <- function(str_to_check, database, method = "osa", no_cores = 2,
   if (dim(database)[2]>1 && is.na(database_strings)){
     stop("database_strings can't be NA when the database provided has more than 1 columns.")
   }
-
+cat(1)
   if (!is.na(str_to_check_col)){
-    this_str <- dplyr::select(str_to_check, str_to_check_col)[1]
+    this_str <- dplyr::select(as.data.frame(str_to_check), as.character(str_to_check_col))[1]
   }else{
     this_str <- str_to_check[1]
   }
-  
+cat(2)  
   this_str_original <- as.character(this_str)
   
   #if the string to find is empty, return NA
