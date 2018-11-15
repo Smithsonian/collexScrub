@@ -77,8 +77,8 @@ cat(2)
     }
     
     if (method == "jw"){
-      #Jaro distance
-      str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method, p = 0))
+      #Jaro-Winkler distance
+      str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method, p = 0.1))
     }else{
       str_matches <- as.data.frame(stringdist::stringdist(this_str, database[,1], nthread = no_cores, method = method))
     }
