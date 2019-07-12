@@ -24,6 +24,7 @@
 #' @importFrom stringdist stringdist
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
+#' @importFrom rlang .data
 #' 
 find_match_str <- function(str_to_check, database, method = "osa", no_cores = 2, year_limits = FALSE, country_limits = FALSE, database_strings = NA, str_to_check_col = NA){
   
@@ -58,12 +59,12 @@ cat(2)
   
   #if limiting by year, use only locations with that year
   if (year_limits && !is.na(str_to_check$year)){
-    database <- dplyr::filter(database, year == str_to_check$year)
+    database <- dplyr::filter(database, .data$year == str_to_check$year)
   }
   
   #if limiting by country, use only locations with that country
   if (country_limits && !is.na(str_to_check$country)){
-    database <- dplyr::filter(database, country == str_to_check$country)
+    database <- dplyr::filter(database, .data$country == str_to_check$country)
   }
   
   if (dim(database)[[1]]==0){

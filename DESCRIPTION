@@ -1,12 +1,13 @@
 Package: collexScrubber
 Type: Package
 Title: Scripts and Tools to Clean Scientific Collection Records
-Version: 0.1
-Date: 2018-06-11
+Version: 0.2
+Date: 2019-07-12
 Authors@R: person("Luis J", "Villanueva", email = "villanueval@si.edu",
                   role = c("aut", "cre"))
-Description: R package to clean and validate the data of items in scientific collections.
-License: CC0
+Description: R package to clean and validate the data of items in museum collections.
+License: file LICENSE
 Encoding: UTF-8
-Depends: R(>= 3.2.0), dplyr, stringdist, XML, curl, taxize
-RoxygenNote: 6.0.1
+Depends: R(>= 3.2.0)
+Imports: dplyr, stringdist, XML, curl, taxize, sp, stringr, jsonlite, tokenizers, stopwords, RCurl, rbhl, rlang
+RoxygenNote: 6.1.1

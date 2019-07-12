@@ -7,15 +7,15 @@
 dms2dd(deg = 0, min = 0, sec = 0, direction = "N", roundto = 5)
 }
 \arguments{
+\item{deg}{Value of the degrees, \code{integer}}
+
+\item{min}{Value of the minutes, \code{integer}}
+
+\item{sec}{Value of the seconds, \code{float}}
+
 \item{direction}{Which direction, \code{N, S, E, or W}}
 
 \item{roundto}{How many decimal places to round to, default 5}
-
-\item{degrees}{Value of the degrees, \code{integer}}
-
-\item{minutes}{Value of the minutes, \code{integer}}
-
-\item{seconds}{Value of the seconds, \code{float}}
 }
 \description{
 Function that converts a messy DMS to a DD format.

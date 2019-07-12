@@ -2,9 +2,9 @@
 #' 
 #' Function that converts a messy DMS to a DD format.
 #'
-#' @param degrees Value of the degrees, \code{integer}
-#' @param minutes Value of the minutes, \code{integer}
-#' @param seconds Value of the seconds, \code{float}
+#' @param deg Value of the degrees, \code{integer}
+#' @param min Value of the minutes, \code{integer}
+#' @param sec Value of the seconds, \code{float}
 #' @param direction Which direction, \code{N, S, E, or W}
 #' @param roundto How many decimal places to round to, default 5
 #' 

@@ -1,6 +1,20 @@
-#Function to search collectors in Harvard University Herbaria & Libraries
+#' Search collectors in Harvard University Herbaria & Libraries
+#' 
+#'
+#' @details https://kiki.huh.harvard.edu/databases/botanist_index.html
+#' @return A list of collectors.
+#' 
+#' @param collector Name of the collector
+#' @param year Year when active
+#' @param country Country where collector collected specimens
+#' 
 #' @export
-
+#' @importFrom curl curl
+#' @importFrom RCurl getURL
+#' @importFrom XML htmlParse
+#' @importFrom XML xpathSApply
+#' @importFrom XML htmlTreeParse
+#' 
 findCollectorsBotany <- function(collector, year = NA, country = NA){
   url_check <- paste("http://kiki.huh.harvard.edu/databases/botanist_search.php?individual=on&json=y&name=", collector, sep = "")
   bot_search_page <- paste("http://kiki.huh.harvard.edu/databases/botanist_search.php?individual=on&name=", collector, sep = "")
@@ -10,7 +24,7 @@ findCollectorsBotany <- function(collector, year = NA, country = NA){
     url_check <- paste(url_check, "&country=", country, sep = "")
   }
   
-  url_content <- curl(url_check)
+  url_content <- curl::curl(url_check)
   suppressWarnings(check_res <- readLines(url_content, n = 1))
   
   #df with results
@@ -23,26 +37,26 @@ findCollectorsBotany <- function(collector, year = NA, country = NA){
       bot_search_page <- paste(bot_search_page, "&country=", country, sep = "")
     }
     
-    results = htmlParse(getURL(bot_search_page))
+    results = XML::htmlParse(RCurl::getURL(bot_search_page))
     
-    bots_count <- length(xpathSApply(results, '//*[@id="main_text_wide"]/form/div/a', xmlValue, resolveNamespaces = FALSE, trim=TRUE))
+    bots_count <- length(XML::xpathSApply(results, '//*[@id="main_text_wide"]/form/div/a', XML::xmlValue, resolveNamespaces = FALSE, trim=TRUE))
     
     #iterate all results
     
     for (i in 1:bots_count){
-      bot_id <- xpathSApply(results, paste('//*[@id="main_text_wide"]/form/div/input[', i, ']', sep=""), xmlGetAttr, 'value')
-      bot_name <- xpathSApply(results, paste('//*[@id="main_text_wide"]/form/div/a[', i, ']', sep = ""), xmlValue, resolveNamespaces = FALSE, trim=TRUE)
+      bot_id <- XML::xpathSApply(results, paste('//*[@id="main_text_wide"]/form/div/input[', i, ']', sep=""), XML::xmlGetAttr, 'value')
+      bot_name <- XML::xpathSApply(results, paste('//*[@id="main_text_wide"]/form/div/a[', i, ']', sep = ""), XML::xmlValue, resolveNamespaces = FALSE, trim=TRUE)
       bot_detail_page <- paste(bot_info_page, bot_id, sep = "")
       
-      bot_details <- getURL(bot_detail_page)
+      bot_details <- RCurl::getURL(bot_detail_page)
       bot_details_table <- readLines(tc <- textConnection(bot_details)); close(tc)
       
       #Get table of the person's data
       # from https://stackoverflow.com/a/1401367
-      pagetree <- htmlTreeParse(bot_details_table, error=function(...){}, useInternalNodes = TRUE)
+      pagetree <- XML::htmlTreeParse(bot_details_table, error=function(...){}, useInternalNodes = TRUE)
       
       # Extract table header and contents
-      bot_table <- xpathSApply(pagetree, "/html/body/table/tr/td", xmlValue)
+      bot_table <- XML::xpathSApply(pagetree, "/html/body/table/tr/td", XML::xmlValue)
       
       # Convert character vector to dataframe
       content <- as.data.frame(matrix(bot_table, ncol = 2, byrow = TRUE))
