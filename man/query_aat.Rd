@@ -9,9 +9,9 @@ query_aat(term = NA, query_type = NA, keywords_string = NA)
 \arguments{
 \item{term}{String to check against the AAT}
 
-\item{query_type}{Which query to use, one of: 'direct', 'anylabel', or 'fulltext'}
+\item{query_type}{Which query to use, one of: 'direct', 'anylabel', 'fulltext', or 'widesearch'}
 
-\item{keywords_string}{String to extract keywords from to try to get a better match (optional)}
+\item{keywords_string}{String or list to extract keywords from to try to get a better match (optional)}
 }
 \value{
 A dataframe of \code{term} (the string provided),
